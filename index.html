@@ -389,6 +389,23 @@ tr.match-row { cursor: pointer; }
   resize: vertical;
 }
 .pm-travel-input:focus, .pm-notes-textarea:focus { outline: 2px solid var(--lightblue); border-color: var(--lightblue); }
+.pm-notes-textarea[readonly] { background: #f2efeb; color: var(--tan); cursor: not-allowed; }
+.pm-section-label-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.pm-section-label-row .pm-section-label { margin-bottom: 0; }
+.pm-unlock-btn {
+  background: none;
+  border: 1px solid var(--tan);
+  color: var(--darkbrown);
+  border-radius: 5px;
+  padding: 3px 9px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pm-unlock-btn:hover { background: var(--cream); }
+.pm-unlock-btn:disabled { opacity: 0.6; cursor: default; }
 .pm-home-note { font-size: 13px; color: var(--tan); font-style: italic; }
 .pm-footer {
   display: flex;
@@ -3321,6 +3338,25 @@ function pmField(m) {
 }
 
 let currentProfileKey = null;
+const NOTES_EDIT_CODE = 'AlUla2026!';
+let notesUnlocked = false;
+try { notesUnlocked = sessionStorage.getItem('alulaNotesUnlocked') === '1'; } catch (e) {}
+
+function unlockNotesEditing() {
+  if (notesUnlocked) return;
+  const code = prompt('Enter the code to edit match notes / report:');
+  if (code === null) return;
+  if (code === NOTES_EDIT_CODE) {
+    notesUnlocked = true;
+    try { sessionStorage.setItem('alulaNotesUnlocked', '1'); } catch (e) {}
+    const ta = document.getElementById('pmNotesInput');
+    if (ta) { ta.readOnly = false; ta.focus(); }
+    const btn = document.getElementById('pmNotesUnlockBtn');
+    if (btn) { btn.textContent = '🔓 Unlocked'; btn.disabled = true; }
+  } else {
+    alert('Incorrect code.');
+  }
+}
 
 function openMatchProfile(key) {
   const m = MATCH_PROFILES[key];
@@ -3353,8 +3389,11 @@ function openMatchProfile(key) {
       ${pmField(m)}
     </div>
     <div class="pm-section">
-      <div class="pm-section-label">Notes / match report</div>
-      <textarea class="pm-notes-textarea" id="pmNotesInput" placeholder="Add notes, logistics updates, or a post-match report…">${matchData[key].notes || ''}</textarea>
+      <div class="pm-section-label-row">
+        <div class="pm-section-label">Notes / match report</div>
+        <button class="pm-unlock-btn no-print" id="pmNotesUnlockBtn" onclick="unlockNotesEditing()" ${notesUnlocked ? 'disabled' : ''}>${notesUnlocked ? '🔓 Unlocked' : '🔒 Unlock to edit'}</button>
+      </div>
+      <textarea class="pm-notes-textarea" id="pmNotesInput" placeholder="Add notes, logistics updates, or a post-match report…" ${notesUnlocked ? '' : 'readonly'}>${matchData[key].notes || ''}</textarea>
     </div>
     <div class="pm-footer no-print">
       <button class="pm-save-btn" onclick="saveProfileFields()">Save</button>
