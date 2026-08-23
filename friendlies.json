@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "fr-20260823235007",
+    "cat": "U17W",
+    "opponent": "Jeddah Girls Academy",
+    "date_iso": "2026-09-09",
+    "time": "17:30",
+    "is_home": true,
+    "venue": "AlUla Training Ground",
+    "notes": "End-to-end pipeline test — safe to ignore"
+  }
+]
