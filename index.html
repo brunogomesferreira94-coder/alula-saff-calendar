@@ -578,6 +578,70 @@ footer {
 .crest-najmat-jeddah { background-image: url(assets/crests/najmat-jeddah.png); }
 .crest-generic { background-image: url(assets/crests/generic.png); }
 
+/* Phone layout. The 7-day week grid and the list table genuinely can't shrink to a phone width
+   without becoming unreadable, so both get their own horizontal scroll container instead of being
+   squeezed -- everything else (header, stats, controls, modals) just gets smaller/stacks. */
+@media (max-width: 640px) {
+  .header { padding: 14px 16px; gap: 10px; }
+  .header-left { gap: 12px; }
+  .header-left img { height: 40px; }
+  .header-title h1 { font-size: 17px; }
+  .header-title p { font-size: 10.5px; }
+  .sync-badge { font-size: 9.5px; padding: 5px 10px; white-space: normal; text-align: center; }
+
+  .stats-bar { padding: 12px 16px; gap: 8px; }
+  .stat-tile { min-width: calc(50% - 4px); padding: 10px 12px; }
+  .stat-tile .stat-num { font-size: 20px; }
+  .stat-tile .stat-label { font-size: 10px; }
+  .next-match-card { min-width: 100%; padding: 14px 16px; }
+  .nmc-opp { font-size: 17px; }
+
+  .controls-bar { padding: 10px 16px 4px; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .pills { gap: 6px; }
+  .pill { padding: 5px 10px; font-size: 11px; }
+  .legend { gap: 8px; }
+  .legend-item { font-size: 10px; }
+  .controls-bar-secondary { padding: 0 16px 10px; }
+
+  .view-toggle { padding: 0 16px 12px; flex-wrap: wrap; gap: 8px; }
+  .view-toggle button { font-size: 12px; padding: 6px 12px; }
+  .export-season-btn { margin-left: 0; }
+  .add-friendly-btn { width: 100%; }
+
+  .calendar-view, .list-view { padding: 0 12px 24px; }
+
+  .cal-month-header { padding: 10px 14px; }
+  .cal-month-title { font-size: 16px; }
+  .cal-collapse-chevron { font-size: 13px; margin-right: 6px; }
+  .cal-month-count { font-size: 10.5px; margin-left: 8px; }
+  .cal-month-badge { font-size: 9px; }
+  .pdf-btn { font-size: 10px; padding: 3px 9px; }
+
+  /* Scroll the week grid horizontally rather than shrinking match badges past legibility. */
+  .cal-month-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cal-weekdays, .cal-row { grid-template-columns: repeat(7, minmax(92px, 1fr)); min-width: 644px; }
+  .cal-cell { min-height: 76px; padding: 4px; }
+  .mb-crest-lg { width: 22px; height: 22px; }
+  .mb-team-name { font-size: 7.5px; }
+  .mb-cat-tag, .mb-ha, .mb-time { font-size: 7px; }
+
+  /* Same idea for the list-view table. */
+  .list-view { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .list-view table { min-width: 680px; }
+  .travel-toolbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  .profile-modal-overlay { padding: 10px; }
+  .pm-header { padding: 18px 18px 14px; }
+  .pm-meta { padding: 4px 18px 16px; }
+  .pm-meta-row { flex-wrap: wrap; }
+  .pm-meta-label { min-width: 100px; font-size: 12px; }
+  .pm-section { padding: 4px 18px 18px; }
+  .pm-crest { width: 44px; height: 44px; }
+  .pm-teams { font-size: 16px; }
+  .pm-footer { padding: 0 18px 20px; }
+  .ff-row-split { flex-direction: column; }
+}
+
 /* Print rules last, so they win the cascade over the screen rules above regardless of source order elsewhere. */
 @page {
   size: landscape;
