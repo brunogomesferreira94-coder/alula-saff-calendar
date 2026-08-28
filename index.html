@@ -711,7 +711,7 @@ footer {
         <p>AlUla SC · Elite Teams + First Team · Season 2026/27</p>
       </div>
     </div>
-    <div class="sync-badge" id="syncBadge">LAST SYNCED: 27 AUG 2026 · WEEKLY AUTO-CHECK WED 09:00</div>
+    <div class="sync-badge" id="syncBadge">LAST SYNCED: 28 AUG 2026 · WEEKLY AUTO-CHECK WED 09:00</div>
   </div>
 
   <div class="stats-bar">
@@ -4124,30 +4124,47 @@ document.querySelectorAll('.cal-month[data-month]').forEach(el => {
   // else: keep whatever the server rendered as the default (based on today's date at build time)
 });
 
-let currentCatFilter = 'ALL';
+// Empty set = "All" (show every category). Otherwise: show only the
+// selected categories (multi-select — click toggles a category on/off).
+let selectedCats = new Set();
 
 function applyFilters() {
   const showFriendlies = document.getElementById('toggleFriendlies').checked;
   document.querySelectorAll('.match-badge').forEach(b => {
     const cat = b.querySelector('.mb-cat-tag').textContent;
     const isFr = b.dataset.friendly === '1';
-    const catOk = (currentCatFilter === 'ALL' || cat === currentCatFilter);
+    const catOk = (selectedCats.size === 0 || selectedCats.has(cat));
     const frOk = (!isFr || showFriendlies);
     b.style.display = (catOk && frOk) ? '' : 'none';
   });
   document.querySelectorAll('.match-row').forEach(r => {
     const isFr = r.dataset.friendly === '1';
-    const catOk = (currentCatFilter === 'ALL' || r.dataset.cat === currentCatFilter);
+    const catOk = (selectedCats.size === 0 || selectedCats.has(r.dataset.cat));
     const frOk = (!isFr || showFriendlies);
     r.style.display = (catOk && frOk) ? '' : 'none';
   });
 }
 
+function updatePillUI() {
+  document.querySelectorAll('.pill').forEach(p => {
+    if (p.dataset.filter === 'ALL') {
+      p.classList.toggle('pill-active', selectedCats.size === 0);
+    } else {
+      p.classList.toggle('pill-active', selectedCats.has(p.dataset.filter));
+    }
+  });
+}
+
 document.querySelectorAll('.pill').forEach(p => {
   p.addEventListener('click', () => {
-    document.querySelectorAll('.pill').forEach(x => x.classList.remove('pill-active'));
-    p.classList.add('pill-active');
-    currentCatFilter = p.dataset.filter;
+    if (p.dataset.filter === 'ALL') {
+      selectedCats.clear();
+    } else if (selectedCats.has(p.dataset.filter)) {
+      selectedCats.delete(p.dataset.filter);
+    } else {
+      selectedCats.add(p.dataset.filter);
+    }
+    updatePillUI();
     applyFilters();
   });
 });
